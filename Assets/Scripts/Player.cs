@@ -5,7 +5,8 @@ public class Player : MonoBehaviour
     public float mouseSensitivity = 2f;
     private float verticalRotation = 0f;
     private Transform cameraTransform;
-    
+    public float pickupRange = 3f;
+
     // Ground Movement
     private Rigidbody rb;
     public float MoveSpeed = 5f;
@@ -44,6 +45,10 @@ public class Player : MonoBehaviour
         moveForward = Input.GetAxisRaw("Vertical");
 
         RotateCamera();
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            TryPickUp();
+        }
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
@@ -108,7 +113,7 @@ public class Player : MonoBehaviour
 
     void ApplyJumpPhysics()
     {
-        if (rb.linearVelocity.y < 0) 
+        if (rb.linearVelocity.y < 0)
         {
             // Falling: Apply fall multiplier to make descent faster
             rb.linearVelocity += Vector3.up * Physics.gravity.y * fallMultiplier * Time.fixedDeltaTime;
@@ -116,7 +121,30 @@ public class Player : MonoBehaviour
         else if (rb.linearVelocity.y > 0)
         {
             // Rising: Change multiplier to make player reach peak of jump faster
-            rb.linearVelocity += Vector3.up * Physics.gravity.y * ascendMultiplier  * Time.fixedDeltaTime;
+            rb.linearVelocity += Vector3.up * Physics.gravity.y * ascendMultiplier * Time.fixedDeltaTime;
         }
     }
+    void TryPickUp()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, pickupRange))
+        {
+            Truffle truffle = hit.collider.GetComponent<Truffle>();
+
+            if (truffle != null)
+            {
+                if (truffle.CanPlayerPickUp(transform))
+                {
+                    truffle.OnPickUp();
+                }
+                else
+                {
+                    Debug.Log("Too far away to pick up.");
+                }
+            }
+        }
+    }
+
 }

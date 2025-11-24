@@ -156,7 +156,7 @@ MonoBehaviour:
   typeMultiplier: 1
   weightMultiplier: 1
   interactDistance: 3
-  player: {fileID: 0}
+  player: {fileID: 1448247346}
 --- !u!65 &295434919
 BoxCollider:
   m_ObjectHideFlags: 0

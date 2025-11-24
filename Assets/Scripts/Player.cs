@@ -24,6 +24,8 @@ public class Player : MonoBehaviour
     private float playerHeight;
     private float raycastDistance;
 
+    private MonoBehaviour currentInteractable;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -45,10 +47,16 @@ public class Player : MonoBehaviour
         moveForward = Input.GetAxisRaw("Vertical");
 
         RotateCamera();
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
         {
-            TryPickUp();
+            if (currentInteractable is Truffle t)
+                t.OnPickUp();
+
+            if (currentInteractable is Shop s)
+                s.SellAllTruffles();
         }
+
+        CheckForInteraction();
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
@@ -163,5 +171,40 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    void CheckForInteraction()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, pickupRange))
+        {
+            // TRUFFLE
+            Truffle truffle = hit.collider.GetComponent<Truffle>();
+            if (truffle != null)
+            {
+                if (truffle.CanPlayerPickUp(transform))
+                {
+                    InteractionUI.Instance.ShowText("Premi E per raccogliere");
+                    currentInteractable = truffle;
+                    return;
+                }
+            }
+
+            // SHOP
+            Shop shop = hit.collider.GetComponent<Shop>();
+            if (shop != null)
+            {
+                InteractionUI.Instance.ShowText("Premi E per vendere i tartufi");
+                currentInteractable = shop;
+                return;
+            }
+        }
+
+        // Se non guardiamo nulla
+        currentInteractable = null;
+        InteractionUI.Instance.HideText();
+    }
+
 
 }

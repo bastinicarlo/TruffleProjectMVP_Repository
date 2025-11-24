@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Shop : MonoBehaviour
 {
-    public float basePrice = 100f;   
+    public float basePrice = 100f;
     public float classMultiplier = 1f;
     public float typeMultiplier = 1f;
     public float weightMultiplier = 1f;
@@ -22,7 +22,7 @@ public class Shop : MonoBehaviour
         }
     }
 
-    void SellAllTruffles()
+    public void SellAllTruffles()
     {
         var items = Inventory.Instance.SellAll();
 
@@ -43,4 +43,5 @@ public class Shop : MonoBehaviour
 
         Debug.Log($"SHOP: Hai venduto tutto per {totalEarned} euro.");
     }
+
 }

@@ -55,6 +55,10 @@ public class Player : MonoBehaviour
             Jump();
         }
 
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            PrintInventory();
+        }
         // Checking when we're on the ground and keeping track of our ground check delay
         if (!isGrounded && groundCheckTimer <= 0f)
         {
@@ -124,6 +128,19 @@ public class Player : MonoBehaviour
             rb.linearVelocity += Vector3.up * Physics.gravity.y * ascendMultiplier * Time.fixedDeltaTime;
         }
     }
+    void PrintInventory()
+    {
+        var items = Inventory.Instance.GetInventory();
+
+        Debug.Log("=== INVENTARIO TRUFFLE ===");
+
+        foreach (var kv in items)
+        {
+            var t = kv.Value;
+            Debug.Log($"{t.truffleType} | Classe: {t.truffleClass} | Peso: {t.weight}g | Qty: {t.quantity}");
+        }
+    }
+
     void TryPickUp()
     {
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));

@@ -65,9 +65,9 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.I))
         {
-            PrintInventory();
+            InventoryUI.Instance.Toggle();
         }
-        // Checking when we're on the ground and keeping track of our ground check delay
+
         if (!isGrounded && groundCheckTimer <= 0f)
         {
             Vector3 rayOrigin = transform.position + Vector3.up * 0.1f;

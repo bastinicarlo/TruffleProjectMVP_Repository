@@ -9,6 +9,8 @@ public class Truffle : MonoBehaviour
 
     public float interactRange = 2f; // Distance player must be within to pick up
 
+    bool minigameRunning = false;
+
     public bool CanPlayerPickUp(Transform player)
     {
         return Vector3.Distance(player.position, transform.position) <= interactRange;
@@ -16,8 +18,21 @@ public class Truffle : MonoBehaviour
 
     public void OnPickUp()
     {
-        // Later this will start the minigame
-        Debug.Log("Picked up truffle: " + truffleType);
-        Destroy(gameObject);
+        if (minigameRunning) return;
+        minigameRunning = true;
+
+        pickupMinigame.StartMinigame(
+            () =>
+            {
+                Debug.Log("Truffle picked up with reflex success!");
+                Destroy(gameObject);
+            },
+            () =>
+            {
+                Debug.Log("Failed reflex. Try again.");
+                minigameRunning = false;
+            }
+        );
     }
+
 }

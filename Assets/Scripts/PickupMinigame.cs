@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class PickupMinigame : MonoBehaviour
 {
-    // Placeholder for now – later this becomes a parent class for multiple minigames
-    public virtual void StartMinigame()
+    public virtual void StartMinigame(System.Action success, System.Action fail)
     {
         Debug.Log("Starting pickup minigame...");
     }
